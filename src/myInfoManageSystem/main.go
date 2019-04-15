@@ -2,9 +2,11 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
+	"runServer"
 )
 
 func main() {
-	fmt.Println("Hello World!")
+	//fmt.Println("Hello World!")
+	runServer.Run()
 }
