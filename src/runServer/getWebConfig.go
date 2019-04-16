@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"io/ioutil"
 	"log"
+	"weblog"
 )
 
 type WebConfig struct {
@@ -16,10 +17,10 @@ type Port struct {
 	PortText string   `xml:",innerxml"`
 }
 
-func GetWebConfig() (string, error) {
+func GetWebConfig(wlog *log.Logger) (string, error) {
 	//content, err := ioutil.ReadFile("../../../Owner-Information-Management-System/config/webConfig.xml")
 	content, err := ioutil.ReadFile("../../config/webConfig.xml")
-	log.Println("读取 webConfig.xml 配置文件")
+	webLog.Wlog(wlog, "[info]", "读取 webConfig.xml 配置文件")
 	if err != nil {
 		log.Fatal(err)
 		return "", err
@@ -31,7 +32,8 @@ func GetWebConfig() (string, error) {
 		return "", err
 	}
 	//log.Println(result)
-	log.Println("服务端口:", result.Port[0].PortText)
+	webLog.Wlog(wlog, "[info]", "服务端口:"+result.Port[0].PortText)
+
 	return result.Port[0].PortText, nil
 	/*
 		for _, o := range result.Port {
