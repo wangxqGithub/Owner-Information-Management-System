@@ -20,6 +20,7 @@ type Port struct {
 func GetWebConfig(wlog *log.Logger) (string, error) {
 	//content, err := ioutil.ReadFile("../../../Owner-Information-Management-System/config/webConfig.xml")
 	content, err := ioutil.ReadFile("../../config/webConfig.xml")
+
 	webLog.Wlog(wlog, "[info]", "读取 webConfig.xml 配置文件")
 	if err != nil {
 		log.Fatal(err)

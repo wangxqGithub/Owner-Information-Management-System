@@ -2,7 +2,7 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"log"
 	"runServer"
 	"weblog"
@@ -10,14 +10,16 @@ import (
 
 func main() {
 
-	logFile, err := webLog.CreateLog()
+	logFile, err := webLog.CreateLogFile()
 	defer logFile.Close()
 	if err != nil {
-		log.Fatalln("open file error !")
+		//log.Fatalln("open file error !")
+		fmt.Println(err)
 	}
 	// 创建一个日志对象,并返回
 	debugLog := log.New(logFile, "[Debug]", log.LstdFlags)
+	webLog.Wlog(debugLog, "[info]", "服务启动")
 
-	//fmt.Println("Hello World!")
-	runServer.Run(debugLog)
+	runServer.RunStart(debugLog)
+
 }
