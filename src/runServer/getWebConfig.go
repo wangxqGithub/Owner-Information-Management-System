@@ -2,6 +2,10 @@ package runServer
 
 import (
 	"encoding/xml"
+	"fmt"
+	"os"
+
+	//"io"
 	"io/ioutil"
 	"log"
 	"weblog"
@@ -17,28 +21,79 @@ type Port struct {
 	PortText string   `xml:",innerxml"`
 }
 
-func GetWebConfig(wlog *log.Logger) (string, error) {
+func (webConfig *WebConfig) ReadWebConfigXML(wlog *log.Logger) error {
+	//1. 读取配置文件
 	//content, err := ioutil.ReadFile("../../../Owner-Information-Management-System/config/webConfig.xml")
 	content, err := ioutil.ReadFile("../../config/webConfig.xml")
-
-	webLog.Wlog(wlog, "[info]", "读取 webConfig.xml 配置文件")
 	if err != nil {
-		log.Fatal(err)
-		return "", err
+		webLog.Wlog(wlog, "[error]", "读取 webConfig.xml 配置文件失败："+err.Error())
+		return err
+	} else {
+		webLog.Wlog(wlog, "[info]", "读取 webConfig.xml 配置文件成功")
 	}
-	var result WebConfig
-	err = xml.Unmarshal(content, &result)
-	if err != nil {
-		log.Fatal(err)
-		return "", err
-	}
-	//log.Println(result)
-	webLog.Wlog(wlog, "[info]", "服务端口:"+result.Port[0].PortText)
 
-	return result.Port[0].PortText, nil
+	//2. 解析XML内容，记录到 WebConfig 结构体的指针中
+	//var result WebConfig
+	err = xml.Unmarshal(content, webConfig)
+
+	if err != nil {
+		//log.Fatal(err)
+		webLog.Wlog(wlog, "[error]", "解析 webConfig.xml 配置文件失败："+err.Error())
+		return err
+	} else {
+		webLog.Wlog(wlog, "[info]", "解析 webConfig.xml 配置文件成功")
+	}
+	return nil
+}
+
+//获取端口
+func (webConfig *WebConfig) GetWebPort() string {
+	return webConfig.Port[0].PortText
+}
+
+//设置端口
+func (webConfig *WebConfig) SetWebPort(port string) {
+	webConfig.Port[0].PortText = port
+}
+
+//将调整后XML内容写入到配置文件中
+func (webConfig *WebConfig) WriteWebConfigXML(wlog *log.Logger) error {
+
+	//1. 判断 config 文件夹是否存在，如果不存在则创建一个 。
+	filePath := "../../config/"
+	err := os.Mkdir(filePath, os.ModePerm)
+	if err != nil {
+		fmt.Println(err)
+		webLog.Wlog(wlog, "[error]", "配置文件夹【config】创建失败")
+	} else {
+		webLog.Wlog(wlog, "[info]", "配置文件夹【config】创建成功")
+	}
+
+	//2. 判断 webConfig.xml 文件是否存在，如果不存在则创建。
+	fileName := "webConfig.xml"
 	/*
-		for _, o := range result.Port {
-			log.Println(o.PortText + "===" + o.PortText)
-		}*/
+		_, err = os.Create(filePath + fileName)
+		if err != nil {
+			fmt.Println(err)
+			webLog.Wlog(wlog, "[error]", "配置文件【webConfig.xml】创建失败")
+		} else {
+			webLog.Wlog(wlog, "[info]", "配置文件【webConfig.xml】创建成功")
+		}
+	*/
 
+	//保存修改后的内容
+	xmlOutPut, outPutErr := xml.MarshalIndent(webConfig, "", "")
+	if outPutErr == nil {
+		//加入XML头
+		headerBytes := []byte(xml.Header)
+		//拼接XML头和实际XML内容
+		xmlOutPutData := append(headerBytes, xmlOutPut...)
+		//写入文件
+		ioutil.WriteFile(filePath+fileName, xmlOutPutData, os.ModeAppend)
+
+		fmt.Println("OK~")
+	} else {
+		fmt.Println(outPutErr)
+	}
+	return nil
 }
