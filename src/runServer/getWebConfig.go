@@ -26,7 +26,7 @@ func (webConfig *WebConfig) ReadWebConfigXML(wlog *log.Logger) error {
 	//content, err := ioutil.ReadFile("../../../Owner-Information-Management-System/config/webConfig.xml")
 	content, err := ioutil.ReadFile("../../config/webConfig.xml")
 	if err != nil {
-		webLog.Wlog(wlog, "[error]", "读取 webConfig.xml 配置文件失败："+err.Error())
+		webLog.Wlog(wlog, "[error]", "读取 webConfig.xml 配置文件失败："+fmt.Sprintf("%s", err))
 		return err
 	} else {
 		webLog.Wlog(wlog, "[info]", "读取 webConfig.xml 配置文件成功")
@@ -38,7 +38,7 @@ func (webConfig *WebConfig) ReadWebConfigXML(wlog *log.Logger) error {
 
 	if err != nil {
 		//log.Fatal(err)
-		webLog.Wlog(wlog, "[error]", "解析 webConfig.xml 配置文件失败："+err.Error())
+		webLog.Wlog(wlog, "[error]", "解析 webConfig.xml 配置文件失败："+fmt.Sprintf("%s", err))
 		return err
 	} else {
 		webLog.Wlog(wlog, "[info]", "解析 webConfig.xml 配置文件成功")
@@ -63,8 +63,7 @@ func (webConfig *WebConfig) WriteWebConfigXML(wlog *log.Logger) error {
 	filePath := "../../config/"
 	err := os.Mkdir(filePath, os.ModePerm)
 	if err != nil {
-		fmt.Println(err)
-		webLog.Wlog(wlog, "[error]", "配置文件夹【config】创建失败")
+		webLog.Wlog(wlog, "[error]", "配置文件夹【config】创建失败"+fmt.Sprintf("%s", err))
 	} else {
 		webLog.Wlog(wlog, "[info]", "配置文件夹【config】创建成功")
 	}
@@ -81,8 +80,9 @@ func (webConfig *WebConfig) WriteWebConfigXML(wlog *log.Logger) error {
 		}
 	*/
 
-	//保存修改后的内容
-	xmlOutPut, outPutErr := xml.MarshalIndent(webConfig, "", "")
+	//3. 保存修改后的内容
+	xmlOutPut, outPutErr := xml.MarshalIndent(webConfig, "	", "	")
+	//xmlOutPut, outPutErr := xml.Marshal(webConfig, "", "")
 	if outPutErr == nil {
 		//加入XML头
 		headerBytes := []byte(xml.Header)
@@ -90,10 +90,11 @@ func (webConfig *WebConfig) WriteWebConfigXML(wlog *log.Logger) error {
 		xmlOutPutData := append(headerBytes, xmlOutPut...)
 		//写入文件
 		ioutil.WriteFile(filePath+fileName, xmlOutPutData, os.ModeAppend)
-
-		fmt.Println("OK~")
+		webLog.Wlog(wlog, "[info]", "修改文件【webConfig.xml】成功")
 	} else {
 		fmt.Println(outPutErr)
+		webLog.Wlog(wlog, "[info]", "修改文件【webConfig.xml】失败："+fmt.Sprintf("%s", outPutErr))
+		return outPutErr
 	}
 	return nil
 }

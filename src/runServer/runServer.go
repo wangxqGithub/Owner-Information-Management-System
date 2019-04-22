@@ -2,6 +2,7 @@ package runServer
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"weblog"
@@ -26,7 +27,7 @@ func run() {
 	//port, err := GetWebConfig(wdubuglog)
 	if err != nil {
 		port = "41599"
-		webLog.Wlog(wdubuglog, "[error]", "读取 webConfig.xml 配置文件失败")
+		webLog.Wlog(wdubuglog, "[error]", "读取 webConfig.xml 配置文件失败"+fmt.Sprintf("%s", err))
 	} else {
 		port = webConfig.GetWebPort()
 		webLog.Wlog(wdubuglog, "[info]", "读取 webConfig.xml 配置文件成功")
@@ -53,7 +54,22 @@ func test(w http.ResponseWriter, r *http.Request) {
 }
 
 func setPort(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "URL.Path = %q\n", r.URL.Path)
-	webConfig.SetWebPort("41598")
-	webConfig.WriteWebConfigXML(wdubuglog)
+	//fmt.Fprintf(w, "URL.Path = %q\n", r.URL.Path)
+	//webConfig.SetWebPort("41598")
+	//webConfig.WriteWebConfigXML(wdubuglog)
+	t, err := template.ParseFiles("../../view/setPort.html", "../../view/template/header.html")
+	if err != nil {
+		webLog.Wlog(wdubuglog, "[error]", "页面【setPort】加载失败"+fmt.Sprintf("%s", err))
+	}
+
+	data := struct {
+		Title string
+	}{
+		Title: "设置端口",
+	}
+
+	err = t.Execute(w, data)
+	if err != nil {
+		webLog.Wlog(wdubuglog, "[error]", "页面【setPort】打开失败"+fmt.Sprintf("%s", err))
+	}
 }
