@@ -54,6 +54,7 @@ func (webConfig *WebConfig) GetWebPort() string {
 //设置端口
 func (webConfig *WebConfig) SetWebPort(port string) {
 	webConfig.Port[0].PortText = port
+
 }
 
 //将调整后XML内容写入到配置文件中
@@ -92,7 +93,7 @@ func (webConfig *WebConfig) WriteWebConfigXML(wlog *log.Logger) error {
 		ioutil.WriteFile(filePath+fileName, xmlOutPutData, os.ModeAppend)
 		webLog.Wlog(wlog, "[info]", "修改文件【webConfig.xml】成功")
 	} else {
-		fmt.Println(outPutErr)
+		//fmt.Println(outPutErr)
 		webLog.Wlog(wlog, "[info]", "修改文件【webConfig.xml】失败："+fmt.Sprintf("%s", outPutErr))
 		return outPutErr
 	}

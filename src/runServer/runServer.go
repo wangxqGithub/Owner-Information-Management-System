@@ -5,6 +5,8 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+
+	//"strings"
 	"weblog"
 )
 
@@ -34,42 +36,76 @@ func run() {
 	}
 
 	//2. 注册页面
-	handleFuns()
-
+	//handleFuns()
+	http.HandleFunc("/", handleFuns)
 	//3. 注册监听
 	webLog.Wlog(wdubuglog, "[info]", "注册监听，启动服务")
 	log.Fatal(http.ListenAndServe("localhost:"+port, nil))
 }
 
-func handleFuns() {
+func handleFuns(w http.ResponseWriter, r *http.Request) {
 	//注册测试页面
-	http.HandleFunc("/test", test)
-	webLog.Wlog(wdubuglog, "[info]", "测试页面注册成功，请使用浏览器访问：http://localhost:"+port+"/test")
-	//注册设置端口页面
-	http.HandleFunc("/setPort", setPort)
+	switch r.URL.Path {
+	case "/":
+		fmt.Fprintf(w, "URL.Path = %q\n", r.URL.Path)
+		test(w, r)
+	case "/setPort":
+		setPort(w, r)
+	default:
+		fmt.Fprintf(w, "URL.Path = %q\n", r.URL.Path)
+	}
 }
 
 func test(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "URL.Path = %q\n", r.URL.Path)
+	// 解析url传递的参数
+	r.ParseForm()
+	/*
+		fmt.Println(r.Form)
+		for k, v := range r.Form {
+			fmt.Println("key:", k)
+			// join() 方法用于把数组中的所有元素放入一个字符串。
+			// 元素是通过指定的分隔符进行分隔的
+			fmt.Println("val:", strings.Join(v, ""))
+		}
+	*/
+	// 输出到客户端
+	port := r.Form["port"]
+	for _, v := range port {
+		//fmt.Println(i)
+		fmt.Fprintf(w, "port:%v\n", v)
+	}
+
 }
 
 func setPort(w http.ResponseWriter, r *http.Request) {
 	//fmt.Fprintf(w, "URL.Path = %q\n", r.URL.Path)
 	//webConfig.SetWebPort("41598")
 	//webConfig.WriteWebConfigXML(wdubuglog)
-	t, err := template.ParseFiles("../../view/setPort.html", "../../view/template/header.html")
-	if err != nil {
-		webLog.Wlog(wdubuglog, "[error]", "页面【setPort】加载失败"+fmt.Sprintf("%s", err))
-	}
 
-	data := struct {
-		Title string
-	}{
-		Title: "设置端口",
-	}
+	//验证请求类型
+	//fmt.Println("method:", r.Method)
+	if r.Method == "GET" {
+		t, err := template.ParseFiles("../../view/setPort.html", "../../view/template/header.html")
+		if err != nil {
+			webLog.Wlog(wdubuglog, "[error]", "页面【setPort】加载失败"+fmt.Sprintf("%s", err))
+		}
 
-	err = t.Execute(w, data)
-	if err != nil {
-		webLog.Wlog(wdubuglog, "[error]", "页面【setPort】打开失败"+fmt.Sprintf("%s", err))
+		data := struct {
+			Title string
+		}{
+			Title: "设置端口",
+		}
+
+		err = t.Execute(w, data)
+		if err != nil {
+			webLog.Wlog(wdubuglog, "[error]", "页面【setPort】打开失败"+fmt.Sprintf("%s", err))
+		}
+	} else {
+		r.ParseForm()
+		//fmt.Println("port:", r.Form["port"])
+		webConfig.SetWebPort(r.Form["port"][0])
+		webConfig.WriteWebConfigXML(wdubuglog)
+		fmt.Fprintf(w, "端口设置成功 ： %q 请重启服务使用新端口访问！\n", r.Form["port"][0])
 	}
 }
