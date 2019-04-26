@@ -15,8 +15,10 @@ func getLogPath() (string, string) {
 
 	// 创建日志文件夹，没有则创建，有则创建失败。
 	filePath := "../../webLog/"
-	//fileName := filePath + time.Now().Format("2006-01-02 15:04:05.000") + ".log"
 	fileName := filePath + time.Now().Format(logName) + ".log"
+	if PathExists(fileName) {
+		fileName = filePath + time.Now().Format("20060102-150405") + ".log"
+	}
 	return filePath, fileName
 }
 

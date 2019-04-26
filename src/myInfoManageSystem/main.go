@@ -4,12 +4,20 @@ package main
 import (
 	"fmt"
 	"log"
+	"readFileLoad"
 	"runServer"
 	"weblog"
 )
 
 func main() {
+	rfl.ListAll()
+	/*
+		run()
+	*/
 
+}
+
+func run() {
 	logFile, err := webLog.CreateLogFile()
 	defer logFile.Close()
 	if err != nil {
@@ -21,5 +29,4 @@ func main() {
 	webLog.Wlog(debugLog, "[info]", "服务启动")
 
 	runServer.RunStart(debugLog)
-
 }
