@@ -1,0 +1,14 @@
+<html>
+{{template "header" .}}
+<body>
+    <h1>下载页面</h1>
+	<table>
+	<tr><th>文件名称</th><th>下载</th></tr>
+	{{range .Items}}
+	<tr>
+	<td>{{.}}<td><td><a href='../../fileload/download/{{.}}'>...</a></td>
+	</tr>
+	{{end}}
+	</table>
+</body>
+</html>

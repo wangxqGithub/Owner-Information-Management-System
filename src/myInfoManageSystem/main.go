@@ -4,17 +4,14 @@ package main
 import (
 	"fmt"
 	"log"
-	"readFileLoad"
+
+	//"readFileLoad"
 	"runServer"
 	"weblog"
 )
 
 func main() {
-	rfl.ListAll()
-	/*
-		run()
-	*/
-
+	run()
 }
 
 func run() {
