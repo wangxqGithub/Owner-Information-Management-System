@@ -4,14 +4,15 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"os"
+
+	//"os"
 	"readFileLoad"
 	"weblog"
 )
 
 type FileData struct {
 	Title string
-	Items []os.FileInfo
+	Items []string
 }
 
 func fileLoad(w http.ResponseWriter, r *http.Request) {

@@ -1,0 +1,74 @@
+
+下载代码
+git clone https://github.com/wangxqGithub/xxmlSERVER.git
+git clone https://github.com/wangxqGithub/xxmlDBSERVER.git
+git clone https://github.com/qw4990/NYADB2.git
+git clone https://github.com/boltdb/bolt.git
+
+进入到该托管项目的根目录
+cd test
+
+将改动的地方添加到版本管理器
+git add .
+
+提交到本地的版本控制库里
+git commit -m "changes log"
+
+将你本地的仓库提交到你的github账号里
+git push -u origin master
+
+将远程代码更新到本地
+git pull
+
+git clone https://github.com/wangxqGithub/xxmlDBSERVER.git
+
+https://marketplace.visualstudio.com/vscode
+
+go get -u -v github.com/nsf/gocode
+go get -u -v github.com/rogpeppe/godef
+go get -u -v github.com/golang/lint/golint
+go get -u -v github.com/lukehoban/go-find-references
+go get -u -v github.com/lukehoban/go-outline
+go get -u -v sourcegraph.com/sqs/goreturns
+go get -u -v golang.org/x/tools/cmd/gorename
+go get -u -v github.com/tpng/gopkgs
+go get -u -v github.com/newhook/go-symbols
+
+{
+    "files.autoSave": "onFocusChange",
+    "go.buildOnSave": true,
+    "go.lintOnSave": true,
+    "go.vetOnSave": true,
+    "go.buildTags": "",
+    "go.buildFlags": [],
+    "go.lintFlags": [],
+    "go.vetFlags": [],
+    "go.coverOnSave": false,
+    "go.useCodeSnippetsOnFunctionSuggest": false,
+    "go.formatOnSave": true,
+    "go.formatTool": "goreturns",
+    "go.goroot": "D:\\go",
+    "go.gopath": "D:\\gocmd\\xxmlDBSERVER",
+    "go.gocodeAutoBuild": true 
+    "go.inferGopath": true,
+}
+
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "remotePath": "",
+            "port": 2345,
+            "host": "127.0.0.1",
+            "program": "${workspaceRoot}\\helloworld",
+            "env": {},
+            "args": []
+        }
+    ]
+}
+
+最近看了go版boltDB的源码, 强烈推荐此项目
