@@ -1,7 +1,6 @@
 // myInfoManageSystem project main.go
 package main
 
-/*
 import (
 	"fmt"
 	"html/template"
@@ -44,7 +43,7 @@ func (*Myhandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h(w, r)
 		return
 	}
-	http.StripPrefix("/", http.FileServer(http.Dir("./upload/"))).ServeHTTP(w, r)
+	http.StripPrefix("/", http.FileServer(http.Dir("../../fileload/upload/"))).ServeHTTP(w, r)
 }
 
 func upload(w http.ResponseWriter, r *http.Request) {
@@ -96,8 +95,8 @@ func check(name string) bool {
 	}
 	return true
 }
-*/
 
+/*
 import (
 	"fmt"
 	"log"
@@ -124,3 +123,4 @@ func run() {
 
 	runServer.RunStart(debugLog)
 }
+*/

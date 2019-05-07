@@ -8,14 +8,14 @@ import (
 )
 
 func ListAll() ([]string, error) {
-	fileName := make([]string, 1)
+	fileName := make([]string, 10)
 	dir_list, err := ioutil.ReadDir("../../fileload/download")
 	if err != nil {
 		fmt.Println("read dir error")
 		return nil, err
 	}
-	for i, v := range dir_list {
-		fileName[i] = v.Name()
+	for _, v := range dir_list {
+		fileName = append(fileName, v.Name())
 		//fmt.Println(i, "=", v.Name())
 	}
 	return fileName, nil
